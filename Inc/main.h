@@ -49,16 +49,30 @@
 
 #define B1_Pin GPIO_PIN_13
 #define B1_GPIO_Port GPIOC
+#define DI_N_Pin GPIO_PIN_0
+#define DI_N_GPIO_Port GPIOA
+#define DI_E_Pin GPIO_PIN_1
+#define DI_E_GPIO_Port GPIOA
 #define USART_TX_Pin GPIO_PIN_2
 #define USART_TX_GPIO_Port GPIOA
 #define USART_RX_Pin GPIO_PIN_3
 #define USART_RX_GPIO_Port GPIOA
+#define DI_S_Pin GPIO_PIN_4
+#define DI_S_GPIO_Port GPIOA
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
+#define DI_W_Pin GPIO_PIN_0
+#define DI_W_GPIO_Port GPIOB
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14
 #define TCK_GPIO_Port GPIOA
+#define B_ON_Pin GPIO_PIN_3
+#define B_ON_GPIO_Port GPIOB
+#define B_VIBR_Pin GPIO_PIN_4
+#define B_VIBR_GPIO_Port GPIOB
+#define B_SPEED_Pin GPIO_PIN_5
+#define B_SPEED_GPIO_Port GPIOB
 
 /* ########################## Assert Selection ############################## */
 /**
@@ -68,13 +82,8 @@
 /* #define USE_FULL_ASSERT    1U */
 
 /* USER CODE BEGIN Private defines */
-#define ON			0x70
-#define OFF			0x6C
-#define VOR			0x77
-#define RUCK		0x79
-#define LINKS		0x61
-#define RECHTS	0x64
-#define HALT		0x73
+//#define SIMPLE_BUTTON
+
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

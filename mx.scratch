@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>D:\Keil_Workspace\Remote\Remote\\Remote</ProjectName>
+<ProjectName>D:\Git\Roller_Remote\\Remote</ProjectName>
 <CMSIS>..\Drivers\CMSIS</CMSIS>
 <HAL_Driver>C:\Users\MeinHobel\STM32Cube\Repository\STM32Cube_FW_L0_V1.10.0\Drivers\CMSIS</HAL_Driver>
 

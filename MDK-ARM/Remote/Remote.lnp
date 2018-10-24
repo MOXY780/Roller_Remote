@@ -2,6 +2,7 @@
 "remote\main.o"
 "remote\stm32l0xx_it.o"
 "remote\stm32l0xx_hal_msp.o"
+"remote\control.o"
 "remote\stm32l0xx_hal_dma.o"
 "remote\stm32l0xx_hal_gpio.o"
 "remote\stm32l0xx_hal_tim_ex.o"

@@ -41,7 +41,7 @@
 #include "stm32l0xx_hal.h"
 
 /* USER CODE BEGIN Includes */
-
+#include "control.h"
 /* USER CODE END Includes */
 
 /* Private variables ---------------------------------------------------------*/
@@ -64,6 +64,7 @@ static void MX_USART2_UART_Init(void);
 
 /* USER CODE BEGIN PFP */
 /* Private function prototypes -----------------------------------------------*/
+HAL_StatusTypeDef Build_TX(TRemote *remote, uint8_t *TX_buffer);
 
 /* USER CODE END PFP */
 
@@ -75,10 +76,11 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-	uint8_t tx_buf[1] = "A";
+	uint8_t tx_buf[1] = "\0";
 	uint8_t tx_buf_len = 1;
-	uint8_t diretion[1] = "\0";
-	uint8_t dir_len = 1;
+	
+	TRemote remote;
+	TButton button;
 	
 	HAL_StatusTypeDef state;
 	
@@ -108,6 +110,8 @@ int main(void)
 
   /* USER CODE BEGIN 2 */
 	HAL_TIM_Base_Start_IT(&htim21);
+	Remote_Init(&remote);
+	Button_Init(&button);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -118,42 +122,23 @@ int main(void)
 
   /* USER CODE BEGIN 3 */
 		if (tim_10ms == 1)
-		{
-			state = HAL_UART_Receive(&huart2, diretion, dir_len, 1);
-			if(state != HAL_OK)
-			{
-				diretion[0] = OFF;
-			}
-			else
-			{
-				switch(diretion[0])
-				{
-					case 	OFF:	
-					case	ON:
-					case	VOR:
-					case	RUCK:
-					case	LINKS:
-					case	RECHTS:	
-					case	HALT:		
-					{
-						tx_buf[0] = diretion[0];
-						break;
-					}
-					default:
-					{
-						tx_buf[0] = OFF;
-						break;	
-					}
-				}
-			}
+		{		
+			Read_Buttons(&remote, &button);
 			
-				
+			if(remote.Ign == B_ON)
+				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);		// for debugging turn LED2 on
+			else
+				HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);	// for debugging turn LED2 off
+			
+			Read_Joystick(&remote);
+			
+			Build_TX(&remote, tx_buf);
+			
 			state = HAL_UART_Transmit(&huart1, tx_buf, tx_buf_len, 1);
 			if(state != HAL_OK)
 			{
 				
 			}
-			
 			
 			tim_10ms = 0;
 		}
@@ -313,6 +298,7 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOH_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
@@ -323,6 +309,12 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : DI_N_Pin DI_E_Pin DI_S_Pin */
+  GPIO_InitStruct.Pin = DI_N_Pin|DI_E_Pin|DI_S_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
   /*Configure GPIO pin : LD2_Pin */
   GPIO_InitStruct.Pin = LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
@@ -330,9 +322,81 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
+  /*Configure GPIO pins : DI_W_Pin B_ON_Pin B_SPEED_Pin */
+  GPIO_InitStruct.Pin = DI_W_Pin|B_ON_Pin|B_SPEED_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : B_VIBR_Pin */
+  GPIO_InitStruct.Pin = B_VIBR_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(B_VIBR_GPIO_Port, &GPIO_InitStruct);
+
 }
 
 /* USER CODE BEGIN 4 */
+
+/**
+  * @brief  This function build the TX Buffer for UART communication
+  * @param  Struct of Remote
+  * @param  Ptr to TX Buffer
+	* @retval State of Function: HAL_OK, HAL_ERROR
+  */
+HAL_StatusTypeDef Build_TX(TRemote *remote, uint8_t *TX_buffer)
+{
+	switch (remote->Joystick)
+	{
+		case ST_HALT:
+			TX_buffer[0] = HALT;
+			break;
+		case ST_FORW:
+			TX_buffer[0] = FORW;
+			break;
+		case ST_FORWRIGHT:
+			TX_buffer[0] = FORWR;
+			break;
+		case ST_RIGHT:
+			TX_buffer[0] = RIGHT;
+			break;
+		case ST_BACKRIGHT:
+			TX_buffer[0] = BACKR;
+			break;
+		case ST_BACK:
+			TX_buffer[0] = BACK;
+			break;
+		case ST_BACKLEFT:
+			TX_buffer[0] = BACKL;
+			break;
+		case ST_LEFT:
+			TX_buffer[0] = LEFT;
+			break;
+		case ST_FORWLEFT:
+			TX_buffer[0] = FORWL;
+			break;
+		default:
+			TX_buffer[0] = HALT;
+			return HAL_ERROR;
+	}
+	
+	if(remote->Drivemode == B_VIBR)
+		TX_buffer[0] |= VIBR;
+	else 
+		TX_buffer[0] &= NORMAL;
+	
+	if(remote->Drivespeed == B_FAST)
+		TX_buffer[0] |= FAST;
+	else 
+		TX_buffer[0] &= SLOW;
+	
+	if(remote->Ign == B_ON)
+		TX_buffer[0] |= ON;
+	else
+		TX_buffer[0] &= OFF;
+	
+	return HAL_OK;
+}
 
 /* USER CODE END 4 */
 

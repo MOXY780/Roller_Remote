@@ -1,7 +1,7 @@
 [PreviousGenFiles]
-HeaderPath=D:/Keil_Workspace/Remote/Remote/Inc
+HeaderPath=D:/Git/Roller_Remote/Inc
 HeaderFiles=stm32l0xx_it.h;stm32l0xx_hal_conf.h;main.h;
-SourcePath=D:/Keil_Workspace/Remote/Remote/Src
+SourcePath=D:/Git/Roller_Remote/Src
 SourceFiles=stm32l0xx_it.c;stm32l0xx_hal_msp.c;main.c;
 
 [PreviousLibFiles]
