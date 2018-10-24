@@ -386,17 +386,17 @@ ARM Macro Assembler    Page 6
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0+ --apcs=inter
 work --depend=remote\startup_stm32l053xx.d -oremote\startup_stm32l053xx.o -I.\R
-TE\_Remote -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.1.1\CMSIS\Include -IC:\Keil_v5\ARM
-\PACK\Keil\STM32L0xx_DFP\1.6.1\Device\Include --predefine="__EVAL SETA 1" --pre
+TE\_Remote -IC:\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\Include -IC:\Keil_v5\ARM
+\PACK\Keil\STM32L0xx_DFP\2.0.0\Drivers\CMSIS\Device\ST\STM32L0xx\Include --pred
 
 
 
 ARM Macro Assembler    Page 7 
 
 
-define="__MICROLIB SETA 1" --predefine="__UVISION_VERSION SETA 524" --predefine
-="_RTE_ SETA 1" --predefine="STM32L053xx SETA 1" --list=startup_stm32l053xx.lst
- startup_stm32l053xx.s
+efine="__EVAL SETA 1" --predefine="__MICROLIB SETA 1" --predefine="__UVISION_VE
+RSION SETA 525" --predefine="_RTE_ SETA 1" --predefine="STM32L053xx SETA 1" --l
+ist=startup_stm32l053xx.lst startup_stm32l053xx.s
 
 
 

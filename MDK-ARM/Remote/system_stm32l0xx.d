@@ -1,4 +1,4 @@
-remote\system_stm32l0xx.o: ../Src/system_stm32l0xx.c
+remote\system_stm32l0xx.o: ..//Src/system_stm32l0xx.c
 remote\system_stm32l0xx.o: ../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l0xx.h
 remote\system_stm32l0xx.o: ../Drivers/CMSIS/Device/ST/STM32L0xx/Include/stm32l053xx.h
 remote\system_stm32l0xx.o: ../Drivers/CMSIS/Include/core_cm0plus.h

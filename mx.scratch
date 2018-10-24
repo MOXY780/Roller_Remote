@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project>
-<ProjectName>D:\Git\Roller_Remote\\Remote</ProjectName>
+<ProjectName>C:\Users\MOC\Documents\Keil_Workspace\Roller_Remote\\Remote</ProjectName>
+<ProjectNature>C</ProjectNature> 
 <CMSIS>..\Drivers\CMSIS</CMSIS>
-<HAL_Driver>C:\Users\MeinHobel\STM32Cube\Repository\STM32Cube_FW_L0_V1.10.0\Drivers\CMSIS</HAL_Driver>
-
+<HAL_Driver>C:\Users\MOC\STM32Cube\Repository\STM32Cube_FW_L0_V1.10.0\Drivers\CMSIS</HAL_Driver>
 <Toolchain>MDK-ARM</Toolchain>
 	<Toolversion>5</Toolversion>
 <Version>0</Version>
 
 <filestoremove>
-	<file>
-	   		<name>..\Drivers\CMSIS\Device\ST\STM32L0xx\Source\Templates\arm\startup_stm32l053xx.s</name>
-	</file>
+    <file>
+    <name>..\Drivers\CMSIS\Device\ST\STM32L0xx\Source\Templates\arm\startup_stm32l053xx.s</name>
+    <name>..\Src\system_stm32l0xx.c</name>
+    </file>
 </filestoremove>
 
 <inctoremove>
@@ -34,7 +35,7 @@
 			
     <usedDebug>true</usedDebug>
     	<debugprobe></debugprobe>
-    <optimization></optimization>
+    <optimization>2</optimization>
     <icfloc>0</icfloc>
     <Adefines>
         <define></define>
@@ -55,8 +56,6 @@
         <Cdefines>
             <define>USE_FULL_LL_DRIVER</define>
             <define>MBEDTLS_CONFIG_FILE=&lt;mbedtls_config.h&gt;</define>
-            <define>_TIMEVAL_DEFINED</define>
-            <define>_SYS_TIME_H_</define>
         </Cdefines>         
     </definestoremove>
     
@@ -132,7 +131,7 @@
 		    <group>
 		    	<name>CMSIS</name>
 							<file>
-								<name>../Src/system_stm32l0xx.c</name>
+								<name>../\Src/system_stm32l0xx.c</name>
 							</file>
 		    	</group>
 	  </group>   
