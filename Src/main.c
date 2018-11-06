@@ -318,7 +318,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pins : DI_N_Pin DI_E_Pin DI_S_Pin */
   GPIO_InitStruct.Pin = DI_N_Pin|DI_E_Pin|DI_S_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pin : LD2_Pin */
@@ -328,8 +328,14 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(LD2_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : DI_W_Pin B_ON_Pin B_VIBR_Pin B_SPEED_Pin */
-  GPIO_InitStruct.Pin = DI_W_Pin|B_ON_Pin|B_VIBR_Pin|B_SPEED_Pin;
+  /*Configure GPIO pin : DI_W_Pin */
+  GPIO_InitStruct.Pin = DI_W_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
+  HAL_GPIO_Init(DI_W_GPIO_Port, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : B_ON_Pin B_VIBR_Pin B_SPEED_Pin */
+  GPIO_InitStruct.Pin = B_ON_Pin|B_VIBR_Pin|B_SPEED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);

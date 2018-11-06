@@ -85,6 +85,7 @@
 
 /* USER CODE BEGIN Private defines */
 //#define SIMPLE_BUTTON
+#define DEBOUNCE
 
 /* USER CODE END Private defines */
 

@@ -121,13 +121,88 @@ void Read_Joystick(TRemote *remote)
 {
 	GPIO_PinState pinN, pinE, pinS, pinW;
 	
-	pinN = HAL_GPIO_ReadPin(DI_S_GPIO_Port, DI_S_Pin);	// all Joystick Pins are mirrored
-	pinE = HAL_GPIO_ReadPin(DI_W_GPIO_Port, DI_W_Pin);	// because contact switches are at
-	pinS = HAL_GPIO_ReadPin(DI_N_GPIO_Port, DI_N_Pin);	// respective invers side
-	pinW = HAL_GPIO_ReadPin(DI_E_GPIO_Port, DI_E_Pin);
+	#ifdef DEBOUNCE
+		static GPIO_PinState tmpN[TEMPLENGTH], tmpE[TEMPLENGTH], tmpS[TEMPLENGTH], tmpW[TEMPLENGTH];
+		GPIO_PinState sameN=0, sameE=0, sameS=0, sameW=0;
+		int i;
+
+		for(i=TEMPLENGTH-1; i>0; i--)		// shift temp arrays to left
+		{
+			tmpN[i]=tmpN[i-1];
+			tmpE[i]=tmpE[i-1];
+			tmpS[i]=tmpS[i-1];
+			tmpW[i]=tmpW[i-1];
+		}
+		
+		tmpN[0] = HAL_GPIO_ReadPin(DI_S_GPIO_Port, DI_S_Pin);	// all Joystick Pins are mirrored
+		tmpE[0] = HAL_GPIO_ReadPin(DI_W_GPIO_Port, DI_W_Pin);	// because contact switches are at
+		tmpS[0] = HAL_GPIO_ReadPin(DI_N_GPIO_Port, DI_N_Pin);	// respective invers side
+		tmpW[0] = HAL_GPIO_ReadPin(DI_E_GPIO_Port, DI_E_Pin);
+		
+		for(i=TEMPLENGTH-1; i>0; i--)
+		{
+			if(tmpN[i]==tmpN[i-1])
+				sameN = GPIO_PIN_SET;
+			else
+				sameN = GPIO_PIN_RESET;
+			
+			if(tmpE[i]==tmpE[i-1])
+				sameE = GPIO_PIN_SET;
+			else
+				sameE = GPIO_PIN_RESET;
+			
+			if(tmpS[i]==tmpS[i-1])
+				sameS = GPIO_PIN_SET;
+			else
+				sameS = GPIO_PIN_RESET;
+			
+			if(tmpW[i]==tmpW[i-1])
+				sameW = GPIO_PIN_SET;
+			else
+				sameW = GPIO_PIN_RESET;
+		}
+		
+		if(sameN==GPIO_PIN_SET)
+		{
+			if(tmpN[0]==GPIO_PIN_SET)
+				pinN = GPIO_PIN_SET;
+			else
+				pinN = GPIO_PIN_RESET;
+		}
+		
+		if(sameE==GPIO_PIN_SET)
+		{
+			if(tmpE[0]==GPIO_PIN_SET)
+				pinE = GPIO_PIN_SET;
+			else
+				pinE = GPIO_PIN_RESET;
+		}
+		
+		if(sameS==GPIO_PIN_SET)
+		{
+			if(tmpS[0]==GPIO_PIN_SET)
+				pinS = GPIO_PIN_SET;
+			else
+				pinS = GPIO_PIN_RESET;
+		}
+		
+		if(sameW==GPIO_PIN_SET)
+		{
+			if(tmpW[0]==GPIO_PIN_SET)
+				pinW = GPIO_PIN_SET;
+			else
+				pinW = GPIO_PIN_RESET;
+		}		
 	
-	if(pinN || pinE || pinS || pinW)
-	{
+	#else
+		pinN = HAL_GPIO_ReadPin(DI_S_GPIO_Port, DI_S_Pin);	// all Joystick Pins are mirrored
+		pinE = HAL_GPIO_ReadPin(DI_W_GPIO_Port, DI_W_Pin);	// because contact switches are at
+		pinS = HAL_GPIO_ReadPin(DI_N_GPIO_Port, DI_N_Pin);	// respective invers side
+		pinW = HAL_GPIO_ReadPin(DI_E_GPIO_Port, DI_E_Pin);
+	#endif
+		
+//	if(pinN || pinE || pinS || pinW)
+//	{
 		if(pinN && !pinE && !pinS && !pinW)
 			remote->Joystick = ST_FORW;
 		else if (pinN && pinE && !pinS && !pinW)
@@ -146,9 +221,9 @@ void Read_Joystick(TRemote *remote)
 			remote->Joystick = ST_FORWLEFT;
 		else
 			remote->Joystick = ST_HALT;
-	}		
-	else
-		remote->Joystick = ST_HALT;
+//	}		
+//	else
+//		remote->Joystick = ST_HALT;
 	
 	return;
 }

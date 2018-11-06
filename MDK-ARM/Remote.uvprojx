@@ -337,7 +337,7 @@
               <MiscControls>--C99</MiscControls>
               <Define>USE_HAL_DRIVER,STM32L053xx</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;          ../Drivers/STM32L0xx_HAL_Driver/Inc;          ../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy;          ../Drivers/CMSIS/Device/ST/STM32L0xx/Include;          ../Drivers/CMSIS/Include</IncludePath>
+              <IncludePath>../Inc;           ../Drivers/STM32L0xx_HAL_Driver/Inc;           ../Drivers/STM32L0xx_HAL_Driver/Inc/Legacy;           ../Drivers/CMSIS/Device/ST/STM32L0xx/Include;           ../Drivers/CMSIS/Include</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -504,9 +504,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>::CMSIS</GroupName>
-        </Group>
-        <Group>
           <GroupName>Drivers/CMSIS</GroupName>
           <Files>
             <File>
@@ -515,6 +512,9 @@
               <FilePath>..//Src/system_stm32l0xx.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>::CMSIS</GroupName>
         </Group>
       </Groups>
     </Target>

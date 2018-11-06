@@ -27,6 +27,8 @@
 #define OFF			0x7F
 #define ON			0x80
 
+#define TEMPLENGTH	3
+
 typedef enum {
 		ST_HALT,
 		ST_FORW,
