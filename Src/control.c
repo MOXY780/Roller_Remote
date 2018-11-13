@@ -56,12 +56,14 @@ void Button_Init(TButton *button)
   */
 void Read_Buttons(TRemote *remote, TButton *button)
 {
-	GPIO_PinState pinOnOff, pinSpeed, pinVibr;
+	GPIO_PinState pinOnOff=GPIO_PIN_RESET, pinSpeed=GPIO_PIN_RESET;
+	GPIO_PinState pinVibr=GPIO_PIN_RESET, pinVibr2=GPIO_PIN_RESET;
 	
 //	pinOnOff 		= HAL_GPIO_ReadPin(B1_GPIO_Port, B1_Pin);			// for debugging or if no ON-OF switch is available 
 	pinOnOff 	= HAL_GPIO_ReadPin(B_ON_GPIO_Port, B_ON_Pin);
 	pinSpeed 	= HAL_GPIO_ReadPin(B_SPEED_GPIO_Port, B_SPEED_Pin);
 	pinVibr 	= HAL_GPIO_ReadPin(B_VIBR_GPIO_Port, B_VIBR_Pin);
+	pinVibr2 	= HAL_GPIO_ReadPin(B_VIBR2_GPIO_Port, B_VIBR2_Pin);
 
 	#ifdef SIMPLE_BUTTON
 		State_OnOff(remote, button, &pinOnOff);
@@ -94,9 +96,15 @@ void Read_Buttons(TRemote *remote, TButton *button)
 			button->Speed.nextState = ST_PRESS_ON;
 		}
 			
-		if(pinVibr == GPIO_PIN_SET)
+		if(pinVibr == GPIO_PIN_SET && pinVibr2 == GPIO_PIN_RESET)
 		{
 			remote->Drivemode = B_VIBR;
+			button->Vibr.currState = ST_PRESS_ON;
+			button->Vibr.nextState = ST_PRESS_OFF;
+		}
+		else if(pinVibr2 == GPIO_PIN_SET && pinVibr == GPIO_PIN_RESET)
+		{
+			remote->Drivemode = B_VIBR_ALWAYS;
 			button->Vibr.currState = ST_PRESS_ON;
 			button->Vibr.nextState = ST_PRESS_OFF;
 		}
@@ -123,7 +131,7 @@ void Read_Joystick(TRemote *remote)
 	
 	#ifdef DEBOUNCE
 		static GPIO_PinState tmpN[TEMPLENGTH], tmpE[TEMPLENGTH], tmpS[TEMPLENGTH], tmpW[TEMPLENGTH];
-		GPIO_PinState sameN=0, sameE=0, sameS=0, sameW=0;
+		GPIO_PinState sameN=GPIO_PIN_RESET, sameE=GPIO_PIN_RESET, sameS=GPIO_PIN_RESET, sameW=GPIO_PIN_RESET;
 		int i;
 
 		for(i=TEMPLENGTH-1; i>0; i--)		// shift temp arrays to left

@@ -387,7 +387,15 @@ HAL_StatusTypeDef Build_TX(TRemote *remote, uint8_t *TX_buffer)
 	}
 	
 	if(remote->Drivemode == B_VIBR)
+	{
+		TX_buffer[0] &= NORMAL;
 		TX_buffer[0] |= VIBR;
+	}
+	else if(remote->Drivemode == B_VIBR_ALWAYS)
+	{
+		TX_buffer[0] &= NORMAL;
+		TX_buffer[0] |= VIBR_ALWAYS;
+	}
 	else 
 		TX_buffer[0] &= NORMAL;
 	
